@@ -1,0 +1,230 @@
+/* Our Life — styles
+   One consolidated stylesheet (replaces the five stacked "contrast fix" layers from V1).
+   Contrast rule: light surfaces use dark navy text; dark surfaces use white text. */
+
+:root{
+  --ink:#27364A;          /* dark navy: text + selected/primary surfaces */
+  --ink-hover:#35485F;
+  --muted:#5F6B78;        /* secondary text (passes AA on white & cream) */
+  --paper:#F7F4EE;        /* cream page background */
+  --card:#FFFFFF;
+  --line:#D8DDE3;
+  --line-soft:#EEF0F2;
+  --sage:#DCE8DF;         /* Shared */
+  --blue:#DDE8F3;         /* James */
+  --gold:#EADBB1;         /* Keith */
+  --sage-dot:#6E8976;
+  --danger:#913B3B;
+  --danger-line:#EADADA;
+  --danger-bg:#FBEFEF;
+  --radius:20px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--paper);color:var(--ink)}
+button,input,select,textarea{font:inherit;color:var(--ink)}
+button{cursor:pointer}
+h1,h2,h3,h4{color:var(--ink)}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid #7FA08A;outline-offset:2px}
+
+.app{max-width:1180px;margin:auto;min-height:100vh;padding:22px}
+
+/* ---------- Header ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand h1{margin:0;font-size:27px}
+.brand small{color:var(--muted)}
+.top-right{display:flex;align-items:center;gap:8px}
+.who{border:1px solid var(--line);background:#fff;border-radius:14px;padding:9px 12px}
+.iconbtn{border:1px solid var(--line);background:#fff;border-radius:14px;padding:9px 12px;font-weight:650}
+.iconbtn:hover{background:var(--paper)}
+.sync{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.sync i{width:8px;height:8px;border-radius:50%;background:#B5BCC5;display:inline-block}
+.sync.ok i{background:var(--sage-dot)}
+.sync.pending i{background:#C9A44C}
+.sync.offline i{background:#B5BCC5}
+.sync.error i{background:var(--danger)}
+
+/* ---------- Navigation ---------- */
+.nav{display:flex;gap:8px;overflow-x:auto;padding:18px 0}
+.nav button{border:0;background:transparent;padding:9px 12px;border-radius:12px;white-space:nowrap;color:#536273}
+.nav button.active{background:var(--ink);color:#fff}
+.nav .more-btn{display:none}
+
+/* ---------- Pages / layout ---------- */
+.page{display:none}
+.page.active{display:block}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:12px 0 18px;flex-wrap:wrap}
+.hero h2{font-size:31px;margin:0}
+.hero p{margin:4px 0;color:var(--muted)}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{background:var(--card);border:1px solid rgba(39,54,74,.08);border-radius:var(--radius);padding:18px;box-shadow:0 6px 18px rgba(39,54,74,.04);min-width:0}
+.card h3{margin:0 0 12px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.card h3 small{font-weight:600;color:var(--muted);letter-spacing:0;text-transform:none}
+.card + .card{margin-top:14px}
+.grid .card + .card{margin-top:0}
+.muted{color:var(--muted)}
+.empty{color:var(--muted);padding:18px 0}
+.section-label{margin:20px 0 9px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#536273;display:flex;justify-content:space-between;gap:10px}
+.section-label:first-child{margin-top:0}
+.section-label span{font-weight:650;letter-spacing:0;text-transform:none;color:var(--muted)}
+
+/* ---------- Rows ---------- */
+.item{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line-soft);min-width:0;overflow-wrap:anywhere}
+.item:last-child{border-bottom:0}
+.item input[type=checkbox]{width:20px;height:20px;flex-shrink:0;accent-color:var(--ink)}
+.item-main{flex:1;min-width:0}
+.item-title{font-weight:700}
+.item-meta{color:var(--muted);font-size:13px;margin-top:3px}
+.done .item-title,.done .item-meta{text-decoration:line-through;opacity:.5}
+.overdue{color:var(--danger);font-weight:700}
+.rowbtns{display:flex;gap:6px;flex-shrink:0;margin-left:auto}
+
+/* ---------- Owner pills (readable dark text on light tints) ---------- */
+.pill{display:inline-block;font-size:12px;line-height:1.4;padding:2px 8px;border-radius:99px;color:var(--ink);background:var(--blue);font-weight:600;text-decoration:none}
+.pill.shared{background:var(--sage)}
+.pill.keith{background:var(--gold)}
+
+/* ---------- Buttons ---------- */
+.bigbtn{border:0;background:var(--ink);color:#fff;border-radius:14px;padding:11px 15px;font-weight:650}
+.bigbtn:hover{background:var(--ink-hover)}
+.bigbtn:disabled{opacity:.6;cursor:default}
+.ghost,.calbtn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:9px 12px;font-weight:650;white-space:nowrap}
+.ghost:hover,.calbtn:hover{background:var(--paper)}
+.smallbtn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:7px 10px;font-size:12px;font-weight:750}
+.smallbtn:hover{background:var(--paper)}
+.deletebtn{border:1px solid var(--danger-line);background:#fff;color:var(--danger);border-radius:10px;padding:7px 10px;font-size:12px;font-weight:750}
+.deletebtn:hover{background:var(--danger-bg)}
+.fab{position:fixed;right:24px;bottom:24px;border:0;background:var(--ink);color:#fff;width:56px;height:56px;border-radius:999px;font-size:26px;line-height:1;box-shadow:0 8px 24px rgba(0,0,0,.18);z-index:6}
+
+/* ---------- Task filters (All / James / Keith / Shared) ----------
+   NEVER REGRESS: unselected = white bg + navy text, selected = navy bg + white text. */
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.filters button{border:1px solid var(--line);background:#fff;color:var(--ink);-webkit-text-fill-color:var(--ink);border-radius:99px;padding:6px 12px;font-weight:600}
+.filters button.active{background:var(--ink);border-color:var(--ink);color:#fff;-webkit-text-fill-color:#fff}
+
+/* ---------- Home ---------- */
+.tonight-title{font-size:22px;font-weight:800;margin:0 0 4px}
+.bignum{font-size:22px;font-weight:800;margin:0 0 4px}
+
+/* ---------- Calendar (phone-style month grid) ---------- */
+.phone-calendar{background:#fff;border:1px solid #E4E7EB;border-radius:24px;padding:18px;box-shadow:0 8px 28px rgba(39,54,74,.05)}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cal-title{font-size:21px;font-weight:800}
+.cal-arrow{width:40px;height:40px;border:1px solid #E1E5E9;border-radius:50%;background:#fff;color:var(--ink);font-size:20px}
+.cal-weekdays,.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal-weekdays div{text-align:center;font-size:11px;font-weight:800;color:#6B7684;padding:5px 0;text-transform:uppercase}
+.cal-day{position:relative;min-height:58px;border:0;background:transparent;border-radius:14px;color:var(--ink);font-size:14px;padding:8px 4px;text-align:center}
+.cal-day:hover{background:var(--paper)}
+.cal-day.outside{color:#A9B1BB}
+.cal-day.today{box-shadow:inset 0 0 0 2px var(--ink);font-weight:800}
+.cal-day.selected{background:var(--ink);color:#fff}
+.cal-day.has-event::after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--sage-dot);bottom:7px;left:50%;transform:translateX(-50%)}
+.cal-day.selected::after{background:#fff}
+.calendar-legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:#5F6B78}
+.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:var(--sage-dot);margin-right:5px}
+.day-agenda{margin-top:20px;border-top:1px solid var(--line-soft);padding-top:16px}
+.day-agenda-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.day-agenda-title{font-size:17px;font-weight:800}
+.eventcard{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-soft);overflow-wrap:anywhere}
+.eventcard:last-child{border-bottom:0}
+.eventmain{min-width:0}
+.eventtitle{font-size:17px;font-weight:750;margin-bottom:5px}
+.eventbtns{display:flex;gap:7px;flex-wrap:wrap}
+
+/* ---------- Meals ---------- */
+.weeknav{display:flex;align-items:center;gap:8px}
+.weeknav b{min-width:150px;text-align:center}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.day{min-height:130px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:10px;min-width:0}
+.day.is-today{box-shadow:inset 0 0 0 2px var(--ink)}
+.day b{display:block}
+.meal{background:var(--sage);padding:8px;border-radius:10px;margin-top:8px;overflow-wrap:anywhere}
+.meal small{display:block;color:var(--ink);opacity:.8;margin-top:2px}
+.meal .rowbtns{margin-top:6px}
+.day .addmeal{margin-top:8px;width:100%}
+
+/* ---------- Groceries ---------- */
+.grocery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.grocery-grid .card + .card{margin-top:0}
+
+/* ---------- Projects ---------- */
+.projectbar{height:8px;background:#EDF0F2;border-radius:99px;overflow:hidden;margin:10px 0}
+.projectbar span{display:block;height:100%;background:var(--ink)}
+.project-title{font-size:20px;font-weight:800;margin:0 0 4px}
+
+/* ---------- Brain Dump ---------- */
+.brain{width:100%;min-height:130px;border:1px solid var(--line);border-radius:15px;padding:14px;background:#fff}
+.inline-field{margin:12px 0}
+.inline-field label{display:block;font-size:12px;font-weight:700;margin-bottom:4px}
+.inline-field select{padding:10px;border:1px solid var(--line);border-radius:11px;background:#fff;min-width:200px}
+
+/* ---------- Workouts ---------- */
+.workout-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.workout-stat{background:#fff;border:1px solid #E4E7EB;border-radius:16px;padding:14px}
+.workout-stat b{display:block;font-size:22px}
+.workout-stat span{font-size:12px;color:var(--muted)}
+
+/* ---------- Modal / sheet ---------- */
+.modal{position:fixed;inset:0;background:rgba(23,32,51,.53);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal.show{display:flex}
+.sheet{background:#fff;border-radius:22px;padding:20px;width:min(520px,100%);max-height:90vh;overflow:auto}
+.sheet h2{margin-top:0}
+.form{display:grid;gap:12px}
+.form label{display:block;font-size:12px;font-weight:700;margin-bottom:4px}
+.form input,.form select,.form textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink)}
+input::placeholder,textarea::placeholder{color:#7B8794;opacity:1}
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:12px;color:var(--muted);margin-top:5px}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.menu-list{display:grid;gap:8px}
+.menu-list button{text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px;font-weight:700}
+.menu-list button:hover{background:var(--paper)}
+.settings-block{border-top:1px solid var(--line-soft);padding-top:14px;margin-top:14px}
+.settings-block h3{font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px}
+
+/* ---------- Login ---------- */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login{width:min(400px,100%)}
+.login h1{margin:0 0 2px;font-size:30px}
+.login .error{color:var(--danger);font-weight:650;font-size:14px}
+
+/* ---------- Banner / toast ---------- */
+.banner{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-top:12px;font-size:13px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 16px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:30;max-width:calc(100% - 32px);font-size:14px}
+
+/* ---------- Responsive ---------- */
+@media(max-width:720px){
+  .app{padding:14px 14px calc(96px + env(safe-area-inset-bottom))}
+  .top{align-items:flex-start}
+  .brand small{display:none}
+  .sync span{display:none}
+  .grid,.grocery-grid{grid-template-columns:1fr}
+  .hero h2{font-size:25px}
+  .week{grid-template-columns:1fr}
+  .day{min-height:auto}
+  /* Phone bottom bar: 4 main sections + More (V1 hid 3 sections entirely). */
+  .nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:5;justify-content:space-around;gap:2px;overflow:visible}
+  .nav button{padding:9px 8px;color:#536273}
+  .nav button.secondary{display:none}
+  .nav .more-btn{display:block}
+  .fab{bottom:calc(76px + env(safe-area-inset-bottom));right:16px}
+  .toast{bottom:calc(140px + env(safe-area-inset-bottom))}
+}
+@media(max-width:520px){
+  .eventcard{align-items:flex-start;flex-direction:column}
+  .eventbtns{width:100%}
+  .eventbtns .calbtn{flex:1}
+  .formrow{grid-template-columns:1fr}
+  .phone-calendar{border-radius:20px;padding:13px}
+  .cal-day{min-height:48px;padding:7px 2px}
+  .cal-grid,.cal-weekdays{gap:2px}
+  .cal-title{font-size:19px}
+  .workout-summary{grid-template-columns:1fr 1fr}
+  .workout-stat:last-child{grid-column:1/-1}
+  .item{align-items:flex-start}
+  .rowbtns{flex-direction:column}
+  .who{max-width:110px}
+}

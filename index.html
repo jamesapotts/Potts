@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; base-uri 'self'; form-action 'self'; object-src 'none'">
+<meta name="theme-color" content="#F7F4EE">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Our Life">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Our Life — James + Keith</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ Sign-in screen (only used when the shared database is configured) ============ -->
+<div class="login-wrap" id="loginScreen" hidden>
+  <form class="card login" id="loginForm" autocomplete="on">
+    <h1>Our Life</h1>
+    <p class="muted" style="margin-top:0">James + Keith — sign in to continue.</p>
+    <div class="form">
+      <div><label for="loginEmail">EMAIL</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+      <div><label for="loginPassword">PASSWORD</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+      <div class="error" id="loginError" role="alert"></div>
+      <button class="bigbtn" id="loginBtn" type="submit">Sign in</button>
+    </div>
+  </form>
+</div>
+
+<!-- ============ Main app ============ -->
+<div class="app" id="appShell" hidden>
+  <div class="top">
+    <div class="brand"><h1>Our Life</h1><small>James + Keith</small></div>
+    <div class="top-right">
+      <div class="sync" id="syncStatus" title="Sync status"><i></i><span id="syncText">This device</span></div>
+      <select class="who" id="viewer" aria-label="Viewing as"><option>James</option><option>Keith</option></select>
+      <button class="iconbtn" data-act="open-settings" aria-label="Settings">⚙︎</button>
+    </div>
+  </div>
+  <div class="banner" id="localBanner" hidden>Local mode: entries are saved only in this browser. See README.md to connect the shared database.</div>
+
+  <nav class="nav" id="nav" aria-label="Sections">
+    <button data-page="home" class="active">Home</button>
+    <button data-page="tasks">Tasks</button>
+    <button data-page="calendar">Calendar</button>
+    <button data-page="meals" class="secondary">Meals</button>
+    <button data-page="groceries">Groceries</button>
+    <button data-page="homeapt" class="secondary">Home + Projects</button>
+    <button data-page="brain" class="secondary">Brain Dump</button>
+    <button data-page="workout" class="secondary">Workout</button>
+    <button class="more-btn" data-act="open-more" aria-label="More sections">More</button>
+  </nav>
+
+  <!-- HOME -->
+  <section id="home" class="page active">
+    <div class="hero"><div><h2 id="hello">Hello</h2><p id="todayLabel"></p></div><button class="bigbtn" data-act="add">+ Quick Add</button></div>
+    <div class="grid">
+      <div class="card"><h3>Today</h3><div id="todayTasks"></div></div>
+      <div class="card"><h3>Coming up</h3><div id="upcoming"></div></div>
+      <div class="card"><h3>Tonight</h3><div id="tonight"></div></div>
+      <div class="card"><h3>Groceries</h3><div id="grocerySummary"></div></div>
+    </div>
+  </section>
+
+  <!-- TASKS -->
+  <section id="tasks" class="page">
+    <div class="hero"><div><h2>Tasks</h2><p>James, Keith, and shared household tasks.</p></div>
+      <div class="hero-actions"><button class="ghost" data-act="add" data-type="Reminder">+ Reminder</button><button class="bigbtn" data-act="add" data-type="Task">+ Add Task</button></div></div>
+    <div class="card">
+      <div class="filters" id="taskFilters" role="group" aria-label="Filter by person">
+        <button data-filter="All" class="active">All</button><button data-filter="James">James</button><button data-filter="Keith">Keith</button><button data-filter="Shared">Shared</button>
+      </div>
+      <div id="taskList"></div>
+    </div>
+    <div class="card"><h3>Reminders</h3><div id="reminderList"></div></div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section id="calendar" class="page">
+    <div class="hero"><div><h2>Calendar</h2><p>One place for what's coming up.</p></div>
+      <div class="hero-actions"><button class="ghost" data-act="export-upcoming">Export upcoming</button><button class="bigbtn" data-act="add-event-selected">+ Add Event</button></div></div>
+    <div class="phone-calendar">
+      <div class="cal-head">
+        <button class="cal-arrow" data-act="month" data-n="-1" aria-label="Previous month">‹</button>
+        <div class="cal-title" id="calendarMonthTitle"></div>
+        <button class="cal-arrow" data-act="month" data-n="1" aria-label="Next month">›</button>
+      </div>
+      <div class="cal-weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+      <div class="cal-grid" id="calendarGrid"></div>
+      <div class="calendar-legend"><span><i class="legend-dot"></i>A dot means you have an event</span></div>
+      <div class="day-agenda">
+        <div class="day-agenda-head"><div class="day-agenda-title" id="selectedDayTitle">Selected Day</div><button class="calbtn" data-act="add-event-selected">＋ Event</button></div>
+        <div id="eventList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEALS -->
+  <section id="meals" class="page">
+    <div class="hero"><div><h2>Meals</h2><p>A simple weekly dinner plan.</p></div>
+      <div class="hero-actions weeknav">
+        <button class="cal-arrow" data-act="week" data-n="-1" aria-label="Previous week">‹</button>
+        <b id="weekLabel"></b>
+        <button class="cal-arrow" data-act="week" data-n="1" aria-label="Next week">›</button>
+        <button class="ghost" data-act="week" data-n="0">This week</button>
+      </div></div>
+    <div class="week" id="mealWeek"></div>
+    <div class="card" id="mealIdeasCard" style="margin-top:14px"><h3>Meal ideas <small>(no date yet)</small></h3><div id="mealIdeas"></div></div>
+  </section>
+
+  <!-- GROCERIES -->
+  <section id="groceries" class="page">
+    <div class="hero"><div><h2>Groceries</h2><p>Shared list for whoever is at the store.</p></div>
+      <div class="hero-actions"><button class="ghost" data-act="clear-bought">Clear checked</button><button class="bigbtn" data-act="add" data-type="Grocery">+ Add Item</button></div></div>
+    <div class="grocery-grid" id="groceryList"></div>
+  </section>
+
+  <!-- HOME + PROJECTS -->
+  <section id="homeapt" class="page">
+    <div class="hero"><div><h2>Home + Projects</h2><p>Apartment ideas, projects, and someday stuff.</p></div><button class="bigbtn" data-act="add" data-type="Project">+ Add Project</button></div>
+    <div class="grid" id="projectList"></div>
+  </section>
+
+  <!-- BRAIN DUMP -->
+  <section id="brain" class="page">
+    <div class="hero"><div><h2>Brain Dump</h2><p>Get it out of your head first. Organize it later.</p></div></div>
+    <div class="card">
+      <label for="brainText" class="muted" style="font-size:12px;font-weight:700">THOUGHT</label>
+      <textarea id="brainText" class="brain" placeholder="I need to remember to..."></textarea>
+      <div class="inline-field"><label for="brainInlineCategory">CATEGORY</label><select id="brainInlineCategory"></select></div>
+      <div class="actions"><button class="bigbtn" data-act="save-brain">Save to Brain Dump</button></div>
+      <div id="brainList"></div>
+    </div>
+  </section>
+
+  <!-- WORKOUT -->
+  <section id="workout" class="page">
+    <div class="hero"><div><h2>Workout Log</h2><p>Keep a simple record of what you did.</p></div><button class="bigbtn" data-act="add" data-type="Workout">＋ Log Workout</button></div>
+    <div class="filters" id="workoutFilters" role="group" aria-label="Filter workouts by person">
+      <button data-wfilter="All" class="active">All</button><button data-wfilter="James">James</button><button data-wfilter="Keith">Keith</button>
+    </div>
+    <div class="workout-summary">
+      <div class="workout-stat"><b id="workoutCount">0</b><span>Workouts logged</span></div>
+      <div class="workout-stat"><b id="workoutCalories">0</b><span>Total calories (estimated)</span></div>
+      <div class="workout-stat"><b id="workoutRecent">—</b><span>Most recent</span></div>
+    </div>
+    <div class="card"><div id="workoutList"></div></div>
+  </section>
+
+  <button class="fab" data-act="add" aria-label="Quick Add">＋</button>
+</div>
+
+<!-- ============ Quick Add / Edit sheet ============ -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="sheet">
+    <h2 id="modalTitle">Quick Add</h2>
+    <form class="form" id="itemForm" novalidate>
+      <div><label for="type">TYPE</label>
+        <select id="type"><option>Task</option><option>Event</option><option>Grocery</option><option>Meal</option><option>Project</option><option>Reminder</option><option>Idea</option><option>Workout</option></select></div>
+      <div><label for="titleInput">WHAT?</label><input id="titleInput" placeholder="What do you need to remember?" maxlength="300"></div>
+      <div class="formrow">
+        <div><label for="owner">WHO?</label><select id="owner"><option>Shared</option><option>James</option><option>Keith</option></select></div>
+        <div><label for="dateInput">DATE</label><input id="dateInput" type="date"></div>
+      </div>
+      <div data-for="Event" hidden>
+        <div class="formrow">
+          <div><label for="startTimeInput">START TIME</label><input id="startTimeInput" type="time"></div>
+          <div><label for="endTimeInput">END TIME</label><input id="endTimeInput" type="time"></div>
+        </div>
+        <div style="margin-top:12px"><label for="locationInput">LOCATION</label><input id="locationInput" placeholder="Optional" maxlength="300"></div>
+        <div class="hint">No start time = all-day event. These details are included when you tap Add to Calendar.</div>
+      </div>
+      <div data-for="Grocery" hidden>
+        <label for="departmentInput">GROCERY DEPARTMENT</label><select id="departmentInput"></select>
+        <div class="hint">Choose where you'd look for this item in the store.</div>
+      </div>
+      <div data-for="Idea" hidden>
+        <label for="brainCategoryInput">BRAIN DUMP CATEGORY</label><select id="brainCategoryInput"></select>
+        <div class="hint">Pick a label so related thoughts stay together.</div>
+      </div>
+      <div data-for="Project" hidden>
+        <label for="progressInput">PROGRESS (%)</label><input id="progressInput" type="number" min="0" max="100" step="5" placeholder="0–100">
+      </div>
+      <div data-for="Workout" hidden>
+        <div class="formrow">
+          <div><label for="durationInput">DURATION (MIN)</label><input id="durationInput" type="number" min="0" inputmode="numeric" placeholder="Optional"></div>
+          <div><label for="caloriesInput">CALORIES BURNED</label><input id="caloriesInput" type="number" min="0" inputmode="numeric" placeholder="Optional estimate"></div>
+        </div>
+        <div class="formrow" style="margin-top:12px">
+          <div><label for="setsInput">SETS</label><input id="setsInput" type="number" min="0" inputmode="numeric" placeholder="Optional"></div>
+          <div><label for="repsInput">REPS</label><input id="repsInput" type="number" min="0" inputmode="numeric" placeholder="Optional"></div>
+        </div>
+        <div style="margin-top:12px"><label for="weightInput">WEIGHT LIFTED (LB)</label><input id="weightInput" type="number" min="0" step="0.5" inputmode="decimal" placeholder="Optional"></div>
+      </div>
+      <div><label for="notesInput">NOTES</label><input id="notesInput" placeholder="Optional" maxlength="1000"></div>
+      <div class="actions"><button type="button" class="ghost" data-act="close-modal">Cancel</button><button type="submit" class="bigbtn">Save</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ "More" sheet (phones) ============ -->
+<div class="modal" id="moreModal" role="dialog" aria-modal="true" aria-label="More sections">
+  <div class="sheet">
+    <h2>More</h2>
+    <div class="menu-list">
+      <button data-goto="meals">Meals</button>
+      <button data-goto="homeapt">Home + Projects</button>
+      <button data-goto="brain">Brain Dump</button>
+      <button data-goto="workout">Workout</button>
+    </div>
+    <div class="actions"><button class="ghost" data-act="close-modal">Close</button></div>
+  </div>
+</div>
+
+<!-- ============ Settings sheet ============ -->
+<div class="modal" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div class="sheet">
+    <h2 id="settingsTitle">Settings</h2>
+    <div id="accountInfo" class="muted"></div>
+    <div class="settings-block">
+      <h3>Backup</h3>
+      <p class="muted" style="margin-top:0">Download a copy of everything, or restore from a copy.</p>
+      <div class="hero-actions"><button class="ghost" data-act="export-json">Download backup</button><button class="ghost" data-act="import-json">Restore from backup…</button></div>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+    <div class="settings-block">
+      <h3>Calendar</h3>
+      <div class="hero-actions"><button class="ghost" data-act="export-upcoming">Export all upcoming events (.ics)</button></div>
+    </div>
+    <div class="settings-block" id="accountBlock" hidden>
+      <h3>Account</h3>
+      <div class="hero-actions"><button class="ghost" data-act="refresh">Refresh now</button><button class="deletebtn" data-act="sign-out" style="padding:10px 14px;font-size:14px">Sign out</button></div>
+    </div>
+    <div class="actions"><button class="bigbtn" data-act="close-modal">Done</button></div>
+  </div>
+</div>
+
+<script src="lib/supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
